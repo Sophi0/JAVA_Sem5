@@ -91,4 +91,38 @@ public class FirstController {
 		return "redirect:/all-products";	//will call /all-products endpoint
 	}
 	
+	@GetMapping("/update-product/{id}")	//localhost:8080/update-product/2
+	public String getUpdateProductFunc(@PathVariable("id") long id, Model model) {
+		if(id > 0) {
+			for(Product temp : products) {
+				if(temp.getId() == id) {
+					model.addAttribute("product", temp);
+					return "update-product-page";	//will call update-product-page.html
+				}
+			}
+		}
+		model.addAttribute("packetError", "Wrong ID");
+		return "error-page";
+	}
+
+	@PostMapping("/update-product/{id}")
+	public String postUpdateProductFunc(@PathVariable("id") long id, Product product) {	//edited product
+		for(Product temp : products) {
+			if(temp.getId() == id) {
+				temp.setTitle(product.getTitle());
+				temp.setDescription(product.getDescription());
+				temp.setPrice(product.getPrice());
+				temp.setQuantity(product.getQuantity());
+				
+				return "redirect:/all-products/"+id;	//will call localhost:8080/all-products/2 endpoint
+			}
+		}
+		return "redirect:/error";	//will call localhost:8080/error
+	}
+	
+	@GetMapping("/error")	//localhost:8080/error
+	public String getErrorFunc(Model model) {
+		model.addAttribute("packetError", "Wring id");
+		return "error-page";	//will call error-page.html
+	}
 	}
