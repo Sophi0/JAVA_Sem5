@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class FirstController {
@@ -40,7 +41,21 @@ public class FirstController {
 	public String getThreeProductsFunc(Model model) {
 		model.addAttribute("packet", products);
 		return "three-products";		//will show products-page.html
-		
-		
+	}
+	
+	
+	//TODO controller for localhost:8080/all-products-find?id=2
+	@GetMapping("/all-products-find")	//localhost:8080/all-products-find?id=2
+	public String getAllProductsFindFunc(@RequestParam("id") long id, Model model) {	//obligati tiesi tadu patu nosaukumu iekavas rakstit, kas ir pec ? zime; lai nesajaukt, lietojam tadu pasu nosaukumu visur
+		if(id > 0) {
+			for(Product temp : products) {
+				if(temp.getId() == id) {
+					model.addAttribute("packet", temp);
+					return "one-product";	//will call one-product.html
+				}
+			}
+		}
+		model.addAttribute("packet-error", "wrong ID");
+		return "error-page";	//will call error-page.html
 	}
 }
