@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -37,7 +39,7 @@ public class FirstController {
 	}
 	
 	//TODO create an ArrayList with 3 products
-	@GetMapping("/three-products")	//localhost:8080/three-products
+	@GetMapping("/all-products")	//localhost:8080/three-products
 	public String getThreeProductsFunc(Model model) {
 		model.addAttribute("packet", products);
 		return "three-products";		//will show products-page.html
@@ -55,7 +57,38 @@ public class FirstController {
 				}
 			}
 		}
-		model.addAttribute("packet-error", "wrong ID");
+		model.addAttribute("packetError", "wrong ID");
 		return "error-page";	//will call error-page.html
 	}
-}
+	
+	//TODO controller for localhost:8080/all-products/2
+	@GetMapping("/all-products/{id}")	//localhost:8080/all-products-find/2
+	public String getAllProductsByIdFunc(@PathVariable("id") long id, Model model) {	
+		if(id > 0) {
+			for(Product temp : products) {
+				if(temp.getId() == id) {
+					model.addAttribute("packet", temp);
+					return "one-product";	//will call one-product.html
+				}
+			}
+		}
+		model.addAttribute("packetError", "Wrong ID");
+		return "error-page";	//will call error-page.html
+	}
+	
+	@GetMapping("/add-product") //localhost:8080/add-product
+	public String getAddProductFunc(Model model) {
+		model.addAttribute("product", new Product());	//send and empty product
+		return "add-product-page";	//will call add-product-page.html
+	}
+	
+	@PostMapping("/add-product")
+	public String postAddProductFunc(Product product) {	//product nosaukums jaasakrit ar nosaukumu, kurs atrodas html failaa; product with all parameters 
+		//TODO verify if this product already exists
+		Product newProduct = new Product(product.getTitle(), product.getDescription(), product.getPrice(), product.getQuantity());
+		products.add(newProduct);	//pievienojam produktus pie product list
+		
+		return "redirect:/all-products";	//will call /all-products endpoint
+	}
+	
+	}
