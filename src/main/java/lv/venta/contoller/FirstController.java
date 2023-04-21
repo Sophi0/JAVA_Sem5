@@ -122,7 +122,23 @@ public class FirstController {
 	
 	@GetMapping("/error")	//localhost:8080/error
 	public String getErrorFunc(Model model) {
-		model.addAttribute("packetError", "Wring id");
+		model.addAttribute("packetError", "Wrong id");
 		return "error-page";	//will call error-page.html
 	}
+	
+	@GetMapping("/delete-product/{id}")	//localhost:8080/delete-product/2
+	public String getDeleteProductFunc(@PathVariable("id") long id, Model model) {
+		if(id > 0) {
+			for(Product temp : products) {
+				if(temp.getId() == id) {
+					products.remove(temp);
+					model.addAttribute("packet", products);
+					return "three-products";	//will call all-products-page.html
+					}		
+				}
+			}
+		model.addAttribute("packetError", "Wrong ID");
+		return "error-page";
+		}
+	
 	}
