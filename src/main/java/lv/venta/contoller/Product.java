@@ -46,5 +46,18 @@ public class Product {
 		Product.idCounter = idCounter;
 	}
 	
+	public Product(String title, String description, float price, int quantity) {
+		setId();
+		this.title = title;
+		this.description = description;
+		this.price = price;
+		this.quantity = quantity;
+	}
 	
+	public Product() {}
+
+	@Override
+	public String toString() {
+		return "" + title + " " + description + " " + price + " " + quantity;
+	}
 }

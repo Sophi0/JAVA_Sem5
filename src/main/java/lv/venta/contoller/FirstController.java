@@ -20,4 +20,11 @@ public class FirstController {
 		model.addAttribute("packet", "Message from Sonja");
 		return "msg-page";	//will show msg-page.html
 	}
+	
+	@GetMapping("/one-product")  //localhost:8080/one-product
+	public String getOneProductFunc(Model model) {
+		Product prod = new Product("Apple", "tasty", 1.2f, 9);
+		model.addAttribute("packet", prod);
+		return "product-page";
+	}
 }
