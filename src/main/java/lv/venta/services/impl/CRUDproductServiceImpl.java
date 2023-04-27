@@ -19,7 +19,7 @@ public class CRUDproductServiceImpl implements ICRUDProductService{
 	@Override
 	public void addNewProduct(String title, String description, float price, int quantity) throws Exception {
 		//TODO verification with regex title and description
-		if(title != null && description != null && price > 0 && price < 10000 && quantity > 0 && quantity < 10000) {
+		if(title != null && description != null && price > 0 && price < 10000 && quantity > 0 && quantity < 10000) {	//obligati taisam parbaudi!
 			boolean isFound = false;
 			for(Product temp : products) {
 				if(temp.getTitle().equals(title) && temp.getDescription().equals(description) && temp.getPrice() == price) {
@@ -46,7 +46,7 @@ public class CRUDproductServiceImpl implements ICRUDProductService{
 
 	@Override
 	public Product retrieveProductById(long id) throws Exception {
-		if(id > 0) {
+		if(id > 0) {	//obligati taisam parbaudi!
 			for(Product temp : products) {
 				if(temp.getId() == id) {
 					return temp;
@@ -61,16 +61,38 @@ public class CRUDproductServiceImpl implements ICRUDProductService{
 
 	@Override
 	public void updateById(long id, String title, String description, float price, int quantity) throws Exception {
-		// TODO Auto-generated method stub
-		
+		if(id > 0) {	//obligati taisam parbaudi!
+			if(title != null && description != null && price > 0 && price < 10000 && quantity > 0 && quantity < 10000) {	//obligati taisam parbaudi!
+				boolean isFound = false;
+				for(Product temp : products) {
+					if(temp.getId() == id) {
+						temp.setTitle(title);
+						temp.setDescription(description);
+						temp.setPrice(price);
+						temp.setQuantity(quantity);
+						isFound = true;
+						break;
+					}
+				}
+				if(!isFound) {
+					throw (new Exception("There is not product with this ID"));
+				}
+			}
+			else {
+				throw (new Exception("Incorrect params"));
+			}
+		}
+		else {
+			throw (new Exception("There is no product with this ID"));
+		}
 	}
 
 	@Override
 	public void deleteProductById(long id) throws Exception {
-		// TODO Auto-generated method stub
-		
+		Product deletedProduct = retrieveProductById(id);
+		products.remove(deletedProduct);		
 	}
 
-	
+
 	
 }
