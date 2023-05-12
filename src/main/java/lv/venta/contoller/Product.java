@@ -73,13 +73,9 @@ public class Product {
 	public long getId() {
 		return id;
 	}
-	public void setId() {
-		this.id = id;
-	}
-
 	
+
 	public Product(String title, String description, float price, int quantity) {
-		setId();
 		this.title = title;
 		this.description = description;
 		this.price = price;
