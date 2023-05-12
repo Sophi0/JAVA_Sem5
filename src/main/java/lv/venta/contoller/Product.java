@@ -10,7 +10,7 @@ public class Product {
 	
 	@NotNull
 	@Size(min = 3, max = 150)
-	@Pattern(regexp = "[A-Z]{1}[a-z\\ ]+")  	//only latin letters; + nozime neierobezoti daudz simbolus
+	@Pattern(regexp = "[A-Z]{1}[a-z\\ ]+", message = "Only latinletters and space")  	//only latin letters; + nozime neierobezoti daudz simbolus
 	//katru parametru validejam
 	//piemeram, lai title nebutu null un uzstaditas min un max vertibas
 	private String title;
@@ -18,7 +18,7 @@ public class Product {
 	
 	@NotNull
 	@Size(min = 5, max = 400)
-	@Pattern(regexp = "[A-Z]{1}[a-z0-9\\ ]+")
+	@Pattern(regexp = "[A-Z]{1}[a-z0-9\\ ]+", message = "Only latinletters and space")
 	private String description;
 	
 	@Min(0)

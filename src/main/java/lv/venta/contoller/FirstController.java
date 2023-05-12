@@ -17,7 +17,7 @@ import lv.venta.services.ICRUDProductService;
 
 @Controller
 public class FirstController {
-	
+
 	@Autowired
 	private ICRUDProductService CRUDservice;
 
@@ -26,28 +26,28 @@ public class FirstController {
 		System.out.println("Sveiki!");
 		return "hello-page"; //there will be hello-page.html
 	}
-	
+
 
 	@GetMapping("/msg")  //localhost:8080/msg
 	public String getMsgFunc(Model model) {
 		model.addAttribute("packet", "Message from Sonja");
 		return "msg-page";	//will show msg-page.html
 	}
-	
+
 	@GetMapping("/one-product")  //localhost:8080/one-product
 	public String getOneProductFunc(Model model) {
 		Product prod = new Product("Apple", "tasty", 1.2f, 9);
 		model.addAttribute("packet", prod);
 		return "one-product"; 	//will show one-product.html
 	}
-	
+
 	//TODO create an ArrayList with 3 products
 	@GetMapping("/all-products")	//localhost:8080/three-products
 	public String getThreeProductsFunc(Model model) {
 		model.addAttribute("packet", CRUDservice.retrieveAllProducts());
 		return "three-products";		//will show products-page.html
 	}
-	
+
 
 	//TODO controller for localhost:8080/all-products-find?id=2
 	@GetMapping("/all-products-find")	//localhost:8080/all-products-find?id=2
@@ -62,7 +62,7 @@ public class FirstController {
 			return "error-page";	//will call error-page.html
 		}
 	}
-	
+
 
 	//TODO controller for localhost:8080/all-products/2
 	@GetMapping("/all-products/{id}")	//localhost:8080/all-products-find/2
@@ -77,59 +77,66 @@ public class FirstController {
 			return "error-page";	//will call error-page.html
 		}
 	}
-	
+
 	@GetMapping("/add-product") //localhost:8080/add-product
 	public String getAddProductFunc(Model model) {
 		model.addAttribute("product", new Product());	//send and empty product
 		return "add-product-page";	//will call add-product-page.html
 	}
-	
+
 	@PostMapping("/add-product")
 	public String postAddProductFunc(@Valid Product product, BindingResult result) {	//product nosaukums jaasakrit ar nosaukumu, kurs atrodas html failaa; product with all parameters 
 		if(!result.hasErrors()) {
-		try {
-			CRUDservice.addNewProduct(product.getTitle(), product.getDescription(), product.getPrice(), product.getQuantity());
-			return "redirect:/all-products";
+			try {
+				CRUDservice.addNewProduct(product.getTitle(), product.getDescription(), product.getPrice(), product.getQuantity());
+				return "redirect:/all-products";
+			}
+			catch (Exception e){
+				return "redirect:/error";	
+			}
 		}
-		catch (Exception e){
-			return "redirect:/error";	
-		}
-	}
 		else {
 			return "add-product-page";
 		}
-}
+	}
 
 	@GetMapping("/update-product/{id}")	//localhost:8080/update-product/2
 	public String getUpdateProductFunc(@PathVariable("id") long id, Model model) {
-		try {
-			Product prod = CRUDservice.retrieveProductById(id);
-			model.addAttribute("product", prod);
-			return "update-product-page";
+			try {
+				Product prod = CRUDservice.retrieveProductById(id);
+				model.addAttribute("product", prod);
+				return "update-product-page";
+			}
+			catch (Exception e) {
+				model.addAttribute("packetError", e.getMessage());
+				return "error-page";	//will call error-page.html
+			}
 		}
-		catch (Exception e) {
-			model.addAttribute("packetError", e.getMessage());
-			return "error-page";	//will call error-page.html
+	
+//!!!!!!obligati @]PostMapping vajag rakstit @Valid un BindingResult result!!!!!
+
+	@PostMapping("/update-product/{id}")
+	public String postUpdateProductFunc(@PathVariable("id") long id, @Valid Product product, BindingResult result) {	//edited product
+		if(!result.hasErrors()) {
+			try {
+				CRUDservice.updateById(id, product.getTitle(), product.getDescription(), product.getPrice(), product.getQuantity());
+				return "redirect:/all-products/" + id;
+			}
+			catch (Exception e) {
+				return "redirect:/error-page";
+			}
+		}
+		else {
+			return "update-product-page";
 		}
 	}
 
-	@PostMapping("/update-product/{id}")
-	public String postUpdateProductFunc(@PathVariable("id") long id, Product product) {	//edited product
-		try {
-			CRUDservice.updateById(id, product.getTitle(), product.getDescription(), product.getPrice(), product.getQuantity());
-			return "update-product-page";
-		}
-		catch (Exception e) {
-			return "error-page";
-		}
-	}
-	
 	@GetMapping("/error")	//localhost:8080/error
 	public String getErrorFunc(Model model) {
 		model.addAttribute("packetError", "Wrong id");
 		return "error-page";	//will call error-page.html
 	}
-	
+
 	@GetMapping("/delete-product/{id}")	//localhost:8080/delete-product/2
 	public String getDeleteProductFunc(@PathVariable("id") long id, Model model) {
 		try {
