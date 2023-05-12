@@ -53,7 +53,6 @@ public class CRUDproductServiceImpl implements ICRUDProductService{
 	@Override
 	public void updateById(long id, String title, String description, float price, int quantity) throws Exception {
 		if(id > 0) {
-			if (productRepo.existsByTitleAndDescriptionAndPrice(title, description, price)) {
 				if(productRepo.existsById(id)) {
 					Product temp = productRepo.findById(id).get();
 					temp.setTitle(title);
@@ -71,7 +70,7 @@ public class CRUDproductServiceImpl implements ICRUDProductService{
 				throw new Exception("ID nees to be positive");
 			}	
 		}
-	}
+	
 
 
 
