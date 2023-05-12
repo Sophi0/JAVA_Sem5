@@ -67,10 +67,10 @@ public class CRUDproductServiceImpl implements ICRUDProductService{
 					throw new Exception("There is no product with this ID");
 				}
 			}
-				else {
-					throw new Exception("ID nees to be positive");
-				}	
-			}
+			else {
+				throw new Exception("ID nees to be positive");
+			}	
+		}
 	}
 
 
